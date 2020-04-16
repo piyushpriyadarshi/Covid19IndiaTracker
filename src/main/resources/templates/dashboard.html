@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"
+    ></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+    <style>
+
+        h3 {
+            font-size: 2rem !important;
+        }
+        #toalCasesCard {
+            background-color: rgb(97, 79, 79);
+            color: bisque;
+        }
+        #toalCuredCard {
+            background-color: rgb(108, 184, 73);
+            color: bisque;
+        }
+        #toalDeathCard {
+            background-color: rgb(129, 28, 28);
+            color: bisque;
+        }
+    </style>
+</head>
+<body>
+<nav class="black darken-1">
+    <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Logo</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+        ><i class="material-icons">menu</i></a
+        >
+        <ul class="right hide-on-med-and-down">
+            <li><a href="sass.html">Sass</a></li>
+            <li><a href="badges.html">Components</a></li>
+            <li><a href="collapsible.html">Javascript</a></li>
+            <li><a href="mobile.html">Mobile</a></li>
+        </ul>
+    </div>
+</nav>
+
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">Sass</a></li>
+    <li><a href="badges.html">Components</a></li>
+    <li><a href="collapsible.html">Javascript</a></li>
+    <li><a href="mobile.html">Mobile</a></li>
+</ul>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col s6 l4 offset-s3"></div>
+        <div class="col s6 l4">
+            <select class="icons"> </select>
+        </div>
+        <div class="col s6 l4">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s4 m4 l4">
+                            <div class="card" id="toalCasesCard">
+                                <div class="card-title">Total Cases</div>
+                                <h3 id="totalCasesData"></h3>
+                            </div>
+                        </div>
+                        <div class="col s4 m4 l4">
+                            <div class="card" id="toalCuredCard">
+                                <div class="card-title">Total Cured</div>
+                                <h3 id="totalCuredData"></h3>
+                            </div>
+                        </div>
+                        <div class="col s4 m4 l4">
+                            <div class="card" id="toalDeathCard">
+                                <div class="card-title">Total Death</div>
+                                <h3 id="totalDeathData"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 l4" id="">
+            <canvas id="totalCases" width="600" height="400"></canvas>
+        </div>
+        <div class="col s12 l4">
+            <canvas id="totalCured" width="600" height="400"></canvas>
+        </div>
+        <div class="col s12 l4">
+            <canvas id="totalDeath" width="600" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+   $(document).ready(function () {
+       $('.sidenav').sidenav();
+       getAllData();
+       let allStates=[];
+       ajaxCall("api/getAllStates","GET",null).then(data => {
+           allStates=data;
+           console.log(allStates);
+           generateAllSelectForState(allStates);
+       });
+
+
+       console.log("inside ")
+        $('select').on('change', function () {
+            let selectedValue = $(this).val();
+            if (selectedValue === 'INDIA All States') {
+                let selectedStateData=[];
+
+                    let url="/api/getIndiaTotal";
+                    ajaxCall(url,"GET",null).then(data => {
+                        selectedStateData=data;
+                        generateDataForChartAndPlotGraph(selectedStateData);
+                        updateTotalData(selectedStateData);
+                    });
+
+            }
+            else{
+                let selectedStateData=[];
+                let index=getIndexOf(allStates,selectedValue);
+                if(index!= -1){
+                    let url="/api/getStateWiseData/"+index;
+                    ajaxCall(url,"GET",null).then(data => {
+                        selectedStateData=data;
+                       generateDataForChartAndPlotGraph(selectedStateData);
+                        updateTotalData(selectedStateData);
+                    });
+                }
+
+
+            }
+        });
+    });
+</script>
+</body>
+</html>
