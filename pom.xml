@@ -13,6 +13,7 @@
     <version>0.1</version>
     <name>covid19mail</name>
     <description>Project for Covid19 Mail Service using SendGrid Api</description>
+    <packaging>war</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -53,6 +54,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>2.2.6.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
