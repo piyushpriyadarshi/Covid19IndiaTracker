@@ -7,7 +7,7 @@ CREATE TABLE `state_wise_data` (
   `total_death` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ;
-
+commit;
 
 CREATE TABLE `state` (
   `id` int(11) NOT NULL,
@@ -52,5 +52,6 @@ insert into State values(31,'Nagaland');
 insert into State values(32,'Meghalaya');
 insert into state values(33,'INDIA All States');
 
+commit;
 
 
