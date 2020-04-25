@@ -1,7 +1,11 @@
 package com.piyushpriyadarshi.covid19mail.multithreading;
 
+import com.piyushpriyadarshi.covid19mail.entity.EmailSubscriber;
+import com.piyushpriyadarshi.covid19mail.entity.State;
 import com.piyushpriyadarshi.covid19mail.entity.StateWiseData;
+import com.piyushpriyadarshi.covid19mail.service.multithreading.EmailSubscribeService;
 import com.piyushpriyadarshi.covid19mail.service.multithreading.Mail;
+import com.piyushpriyadarshi.covid19mail.service.multithreading.StateService;
 import com.piyushpriyadarshi.covid19mail.service.multithreading.StateWiseDataService;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
@@ -14,21 +18,35 @@ import java.util.List;
 
 @Component
 public class Telengana implements Runnable {
-
     @Autowired
     private StateWiseDataService stateWiseDataService;
 
     @Autowired
     private Mail mailService;
 
+    @Autowired
+    private EmailSubscribeService emailSubscribeService;
+
+    @Autowired
+    private StateService stateService;
+
     @Override
     public void run() {
-
         Date now = new Date();
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         String mysqlDateString = formatter.format(now);
+        State s=stateService.getStateByName("Telengana");
+        List<EmailSubscriber> emailList=emailSubscribeService.findEmailSubscriberByState(s);
+        if(emailList.size()==0){
+            System.out.println("No email subscribed for Telengana");
+            return;
+        }
         List<StateWiseData> ll=stateWiseDataService.findByStateNameAndDate(mysqlDateString,"Telengana");
+        if(ll.size()==0){
+            System.out.println("No Data for today");
+            return;
+        }
 
         Personalization personalization=new Personalization();
         personalization.addDynamicTemplateData("totalCured",ll.get(0).getCuredCase());
@@ -40,19 +58,16 @@ public class Telengana implements Runnable {
         personalization.addDynamicTemplateData("state", "Telengana");
         personalization.addDynamicTemplateData("today", mysqlDateString);
 
+        for (EmailSubscriber email: emailList) {
+            Email e1=new Email();
+            e1.setEmail(email.getEmailId());
+            personalization.addBcc(e1);
+        }
 
-
-
-        Email e1=new Email();
-        e1.setEmail("priyadarship4@gmail.com");
-        Email e2=new Email();
-        e2.setEmail("Preetipriyanka24@gmail.com");
-        personalization.addBcc(e1);
-        personalization.addBcc(e2);
 
         Email to = new Email();
-        to.setName("Piyush");
-        to.setEmail("priyadarship85@gmail.com");
+        to.setName("Sam");
+        to.setEmail("pkpray2@gmail.com");
         personalization.addTo(to);
         try{
             boolean status=mailService.sendEmailUsingDynamicTemplate(personalization);
@@ -61,7 +76,5 @@ public class Telengana implements Runnable {
         catch (Exception e){
             System.out.println("Some Error Ocuured");
         }
-
-
     }
 }

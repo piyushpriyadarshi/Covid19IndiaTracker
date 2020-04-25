@@ -1,8 +1,12 @@
 package com.piyushpriyadarshi.covid19mail.multithreading;
 
+import com.piyushpriyadarshi.covid19mail.entity.EmailSubscriber;
+import com.piyushpriyadarshi.covid19mail.entity.State;
 import com.piyushpriyadarshi.covid19mail.entity.StateWiseData;
 import com.piyushpriyadarshi.covid19mail.repository.StateWiseDataRepository;
+import com.piyushpriyadarshi.covid19mail.service.multithreading.EmailSubscribeService;
 import com.piyushpriyadarshi.covid19mail.service.multithreading.Mail;
+import com.piyushpriyadarshi.covid19mail.service.multithreading.StateService;
 import com.piyushpriyadarshi.covid19mail.service.multithreading.StateWiseDataService;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
@@ -21,13 +25,29 @@ public class Delhi implements Runnable{
     @Autowired
     private Mail mailService;
 
+    @Autowired
+    private EmailSubscribeService emailSubscribeService;
+
+    @Autowired
+    private StateService stateService;
+
     @Override
     public void run() {
         Date now = new Date();
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         String mysqlDateString = formatter.format(now);
+        State s=stateService.getStateByName("Delhi");
+        List<EmailSubscriber> emailList=emailSubscribeService.findEmailSubscriberByState(s);
+        if(emailList.size()==0){
+            System.out.println("No email subscribed for Delhi");
+            return;
+        }
         List<StateWiseData> ll=stateWiseDataService.findByStateNameAndDate(mysqlDateString,"Delhi");
+        if(ll.size()==0){
+            System.out.println("No Data for today");
+            return;
+        }
 
         Personalization personalization=new Personalization();
         personalization.addDynamicTemplateData("totalCured",ll.get(0).getCuredCase());
@@ -39,19 +59,16 @@ public class Delhi implements Runnable{
         personalization.addDynamicTemplateData("state", "Delhi");
         personalization.addDynamicTemplateData("today", mysqlDateString);
 
+        for (EmailSubscriber email: emailList) {
+            Email e1=new Email();
+            e1.setEmail(email.getEmailId());
+            personalization.addBcc(e1);
+        }
 
-
-
-        Email e1=new Email();
-        e1.setEmail("priyadarship4@gmail.com");
-        Email e2=new Email();
-        e2.setEmail("pkpray2@gmail.com");
-        personalization.addBcc(e1);
-        personalization.addBcc(e2);
 
         Email to = new Email();
         to.setName("Sam");
-        to.setEmail("priyadarship85@gmail.com");
+        to.setEmail("pkpray2@gmail.com");
         personalization.addTo(to);
         try{
             boolean status=mailService.sendEmailUsingDynamicTemplate(personalization);

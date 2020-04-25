@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class IndexController {
-    @GetMapping("/index")
-    public String showSignUpForm() {
-        return "dashboard";
+    @GetMapping(value = {"/","/index","/index.html"})
+    public String index() {
+        return "index";
     }
 
     /**

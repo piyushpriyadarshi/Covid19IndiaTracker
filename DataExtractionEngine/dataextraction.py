@@ -29,18 +29,6 @@ soup = BeautifulSoup(page.content, 'html.parser')
 all_data=soup.find('tbody').findAll('tr')
 
 
-for i in range(0,33):
-    all_td=all_data[i].findAll('td')
-    state=all_td[1].text
-    total_case=all_td[2].text
-    cured_case=all_td[3].text
-    total_death=all_td[4].text
-    print(state,"\t",total_case,"\t",cured_case)
-
-    
-print("done")
-
-
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -61,6 +49,8 @@ for i in range(0,33):
     val = (state,now.strftime('%Y-%m-%d'),total_case,cured_case,total_death)
     mycursor.execute(sql, val)
     print(state,"\t",total_case,"\t",cured_case)
+    if(state=='West Bengal'):
+      break
 mydb.commit()
 
 print("Done for Today No Error Reported")

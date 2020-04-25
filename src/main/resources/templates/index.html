@@ -1,10 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <style>
+        #totalCuredDataDisplay {
+            background-color: rgb(108, 184, 73);
+        }
+        #totalCasesDataDisplay {
+            background-color: rgb(97, 79, 79);
+        }
+        #totalDeathDataDisplay {
+            background-color: rgb(253, 31, 31);
+        }
+        .btn{
+            margin: 10px;
+        }
+        #totalDeathDataDisplayPredicted{
+            background-color: rgb(253, 31, 31);
+        }
+        #totalCuredDataDisplayPredicted {
+            background-color: rgb(108, 184, 73);
+        }
+        #totalCasesDataDisplaypredicted {
+            background-color: rgb(97, 79, 79);
+        }
+    </style>
+
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-glyphs/30/000000/coronavirus.png"/>
+
+    <title>Covid19 India DashBoard || Tracking Every Single Corona Virus Case , Get the Projected No of Cases until 3 May 2020</title>
 </head>
+<header>
+    <h1 class="display-4 text-center my-4">India Covid19 Tracker</h1>
+</header>
 <body>
-<h1>Welcome</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-6">
+            <div class="form-group">
+                <label for="state">Select State:</label>
+                <select id="state" class="form-control"></select>
+            </div>
+
+        </div>
+        <div class="col-sm-3 col-md-2">
+            <div class="card">
+                <h5 class="card-header">Total Cases</h5>
+                <div class="card-body" id="totalCasesDataDisplay">
+                    <div class="card-text">
+                        <span class="display-4" id="totalCasesData"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-md-2">
+            <div class="card">
+                <h5 class="card-header">Total Cured</h5>
+                <div class="card-body" id="totalCuredDataDisplay">
+                    <div class="card-text">
+                        <span class="display-4" id="totalCuredData"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-md-2">
+            <div class="card">
+                <h5 class="card-header">Total Death</h5>
+                <div class="card-body" id="totalDeathDataDisplay">
+                    <div class="card-text">
+                        <span class="display-4" id="totalDeathData"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- row end -->
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <button type="button" class="btn btn-primary d-inline" data-toggle="modal" data-target="#exampleModal">Subscribe To Daily Updates</button>
+            <button type="button" class="btn btn-primary d-inline" data-toggle="modal" data-target="#MlPredictionMODAL">Check the projection of Total Cases</button>
+        </div>
+        <div class="col-sm-12 col-md-4">
+
+        </div>
+    </div>
+    <!-- container end -->
+</div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a
+                class="nav-link active btn btn-primary"
+                id="home-tab"
+                data-toggle="tab"
+                href="#home"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true"
+        >Basic Visualization</a
+        >
+    </li>
+    <li class="nav-item">
+        <a
+                class="nav-link btn btn-primary"
+                id="profile-tab"
+                data-toggle="tab"
+                href="#profile"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false"
+        >Advance Visualization</a
+        >
+    </li>
+    <li class="nav-item">
+        <a
+                class="nav-link btn btn-primary"
+                id="contact-tab"
+                data-toggle="tab"
+                href="#mlPrediction"
+                role="tab"
+                aria-controls="mlPrediction"
+                aria-selected="false"
+        >ML Prediction</a
+        >
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div
+            class="tab-pane fade show active"
+            id="home"
+            role="tabpanel"
+            aria-labelledby="home-tab"
+    >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                    <canvas id="totalCases" width="600" height="700"></canvas>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <canvas id="totalCured" width="600" height="700"></canvas>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <canvas id="totalDeath" width="600" height="700"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div
+            class="tab-pane fade"
+            id="profile"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+    >
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-4" id="advanceTotalCasesContainer">
+                    <canvas id="advanceTotalCases" width="600" height="700"></canvas>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4" id="advanceTotalCuredContainer">
+                    <canvas id="advanceTotalCured" width="600" height="700"></canvas>
+
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4" id="advanceTotalDeathContainer">
+                    <canvas id="advanceTotalDeath" width="600" height="700"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div
+            class="tab-pane fade"
+            id="mlPrediction"
+            role="tabpanel"
+            aria-labelledby="mlPrediction-tab"
+    >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-4" id="predictedTotalCasesContainer">
+                    <canvas id="predictedTotalCases" width="600" height="700"></canvas>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4" id="predictedTotalCuredContainer">
+                    <canvas id="predictedTotalCured" width="600" height="700"></canvas>
+
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4" id="predictedTotalDeathContainer">
+                    <canvas id="predictedTotalDeath" width="600" height="700"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Subscribe to Our Daily Covid19 Data update</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span class="text-success">Daily Mail will be auto Triggered at 9:30 Am IST </span>
+
+                <div class="form-group">
+                    <label for="stateForSubscribe" class="col-form-label">Select State:</label>
+                    <select id="stateForSubscribe" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="emailForSubscribe" class="col-form-label">Enter Email:</label>
+                    <input type="text" id="emailForSubscribe" class="form-control">
+                </div>
+                <button class="btn btn-primary" style="width: 100%" id="subscribeButton" data-dismiss="modal">Subscribe</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="MlPredictionMODAL" tabindex="-1" role="dialog" aria-labelledby="MlPredictionMODAL" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Get The Prediction of Total No of Case, Cured Case and Deaths </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="stateForPrediction" class="col-form-label">Select State:</label>
+                    <select id="stateForPrediction" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="datesForPrediction" class="col-form-label">Select Date For Prediction:</label>
+                    <input type="date" name="" id="datesForPrediction" class="form-control">
+                </div>
+                <button class="btn btn-primary" style="width: 100%" id="predictionButton" >Get Prediction</button>
+                <div class="row">
+                    <div class="col-sm-3 col-md-4">
+                        <div class="card">
+                            <h5 class="card-header">Total Cases Predicted</h5>
+                            <div class="card-body" id="totalCasesDataDisplaypredicted">
+                                <div class="card-text">
+                                    <span class="display-4" id="totalCasesDataPredicted"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-4">
+                        <div class="card">
+                            <h5 class="card-header">Total Cured Predicted</h5>
+                            <div class="card-body" id="totalCuredDataDisplayPredicted">
+                                <div class="card-text">
+                                    <span class="display-4" id="totalCuredDataPredicted"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-4">
+                        <div class="card">
+                            <h5 class="card-header">Total Death Predicted</h5>
+                            <div class="card-body" id="totalDeathDataDisplayPredicted">
+                                <div class="card-text">
+                                    <span class="display-4" id="totalDeathDataPredicted"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://www.lactame.com/lib/ml/5.1.1/ml.min.js"></script>
+<script src="js/index/dashboard.js"></script>
+<script src="js/index/script.js"></script>
+<script src="js/index/main.js"></script>
+<script src="js/index/mlapi.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 </body>
+
+
+
 </html>
