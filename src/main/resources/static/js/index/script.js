@@ -27,14 +27,69 @@ function generateAllSelectForState(allStates){
             $('<option></option>').attr('value', allStates[i]).text(allStates[i])
         );
     }
-    $('select').formSelect();
     $('select').closest('.input-field').children('span.caret').remove();
 
 }
 
 function getIndexOf(str,pattern){
-    return str.indexOf(pattern);s
+    return str.indexOf(pattern);
 }
+
+function poulateChart(canvasId,label,chartdata,chartType,color,typeData){
+    var parent = document.getElementById(canvasId+'Container');
+    var child = document.getElementById(canvasId);
+    parent.removeChild(child);
+    let canvasElement='<canvas id="'+canvasId+'" width="600" height="700" ></canvas>';
+    parent.innerHTML =canvasElement ;
+    console.log(canvasElement);
+
+    // for (let i = 0; i < window.canvasId.length; i++) {
+    //     if(window.canvasId[i] !=null){
+    //         let id=window.canvasId[i].canvas.id;
+    //         if(id===canvasId){
+    //             window.canvasId[i].destroy();
+    //             console.log(window.canvasId[i]+" Destroyed");
+    //             window.canvasId.splice(i, 1);
+    //         }
+    //     }
+    //
+    // }
+
+    let option = {
+        layout: {
+            padding: 10,
+        },
+        legend: {
+            position: 'bottom',
+        },
+        title: {
+            display: true,
+            text: typeData,
+        },
+
+    };
+    let chart=new Chart(document.getElementById(canvasId).getContext('2d'), {
+        type: chartType, // also try bar or other graph types
+
+        // The data for our dataset
+        data: {
+            labels: label,
+            // Information about the dataset
+            datasets: [
+                {
+                    label: typeData,
+                    backgroundColor: color,
+                    borderColor: 'black',
+                    data: chartdata,
+                },
+            ],
+        },
+
+        // Configuration options
+        options: option,
+    });
+}
+
 
 function generateChart(label,totalCasesData,totalCuredData,totalDeathData){
     if(window.totalCuredChart!=null){
@@ -121,7 +176,7 @@ function generateChart(label,totalCasesData,totalCuredData,totalDeathData){
             datasets: [
                 {
                     label: 'Total Cured',
-                    backgroundColor: 'green',
+                    backgroundColor: 'rgb(108, 184, 73)',
                     borderColor: 'royalgreen',
                     data: totalCuredData,
                 },
@@ -168,8 +223,8 @@ function generateChart(label,totalCasesData,totalCuredData,totalDeathData){
                 datasets: [
                     {
                         label: 'Total Death',
-                        backgroundColor: 'lightblue',
-                        borderColor: 'royalblue',
+                        backgroundColor: 'rgb(253, 31, 31)',
+                        borderColor: 'black',
                         data: totalDeathData,
                     },
                 ],
@@ -196,7 +251,18 @@ function generateDataForChartAndPlotGraph(selectedStateData){
             totalCuredData.push(selectedStateData[i].curedCase);
             totalDeathData.push(selectedStateData[i].totalDeath);
         }
+        buildMlMODEL(label,totalCasesData,totalCuredData,totalDeathData);
+        let datesArray=getDates(new Date(2020,4,3));
+        let obj=predictindiaTotal(datesArray);
+
         generateChart(label,totalCasesData,totalCuredData,totalDeathData);
+        poulateChart("advanceTotalCases",label,totalCasesData,'pie','rgb(97, 79, 79)',"Total Cases By Date");
+        poulateChart("advanceTotalCured",label,totalCuredData,'pie','rgb(108, 184, 73)',"Total Cured By Date");
+        poulateChart("advanceTotalDeath",label,totalDeathData,'pie','rgb(253, 31, 31)',"Total Death By Date");
+
+        poulateChart("predictedTotalCases",datesArray,obj.predictedTotalArray,'line','rgb(97, 79, 79)',"Total Cases Predicted ");
+        poulateChart("predictedTotalCured",datesArray,obj.predictedCuredArray,'line','rgb(108, 184, 73)',"Total Cured Predicted ");
+        poulateChart("predictedTotalDeath",datesArray,obj.predictedDeathArray,'line','rgb(253, 31, 31)',"Total Death Predicted ");
     }
     else {
         console.log("Data is not correct");
