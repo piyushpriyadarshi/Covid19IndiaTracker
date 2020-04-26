@@ -4,7 +4,7 @@ web application both web and mobile optimized to track and visualize every singl
 you can see the live demo of application at [COVI19 India DashBoard](https://piyushpriyadarshi.com/covid19/ "COVI19 India DashBoard")
 
 
-![Dashboard!](/screenshots/dashboard.jpg "COVI19 India DashBoard")
+![Dashboard!](https://github.com/piyushpriyadarshi/Covid19IndiaTracker/blob/master/screenshots/dashboard.JPG "COVI19 India DashBoard")
 
 
 
