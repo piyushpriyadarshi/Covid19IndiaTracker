@@ -1,7 +1,11 @@
 # Application to track Covid 19 total Cases in India
 
 web application both web and mobile optimized to track and visualize every single corona virus cases in India.
-you can see the live demo of application at [COVI19 India DashBoard](https://dev.mysql.com/downloads/installer/ "MySql Installler")
+you can see the live demo of application at [COVI19 India DashBoard](https://piyushpriyadarshi.com/covid19/ "COVI19 India DashBoard")
+
+
+![Dashboard!](/screenshots/dashboard.jpg "COVI19 India DashBoard")
+
 
 
 ### Features of This Application
@@ -17,8 +21,10 @@ you can see the live demo of application at [COVI19 India DashBoard](https://dev
 
 #### Steps to Setup this application
 
+##### Step 1. Clone the Repository
+        1. git clone https://github.com/piyushpriyadarshi/Covid19IndiaTracker.git
 
-##### Step 1. Setup the Datatbase
+##### Step 2. Setup the Datatbase
 
         1. Download and configure the Mysql Database 
   
@@ -26,10 +32,14 @@ you can see the live demo of application at [COVI19 India DashBoard](https://dev
             1. create schema covid;
         3. Run the schema.sql file into newly created covid schema.
         4. Update the Database Details in application.properties 
+        
+            spring.datasource.url=jdbc:mysql://localhost:3306/covid
+            spring.datasource.username=root
+            spring.datasource.password=<rootpassword>
 
 [MySql Installer](https://dev.mysql.com/downloads/installer/ "MySql Installler")        
 
-##### Step2. Setup DataExtraction Engine 
+##### Step 3. Setup DataExtraction Engine 
 
     1. Install Python (if possible install python 3.6 or higher)
     2. Install 3 modules (requests, bs4 and mysql-python-connector) using below command
@@ -45,17 +55,20 @@ you can see the live demo of application at [COVI19 India DashBoard](https://dev
     1. Create an acccount on sendgrid,
     2. Create API from Sendgrid account
     3. Update the Email Template  from below link into Dynamic template of your account
+    4. update your Api key and Template id into application.properties
+    
+       mailservice.apikey=##################
+       mailservice.templateid=#############
     
     
 [Template for Email](/EmailTemplate/EmailTemplate.html "MySql Installler")   
     
 
   
-##### Setup 5.Run the Application
+##### Setup 5. Run the Application
 
-    1. git clone https://github.com/piyushpriyadarshi/Covid19IndiaTracker.git
-    2. Open the Project in Intellij idea or Eclipse or STS
-    3. Run the application
+    1. Open the Project in Intellij idea or Eclipse or STS
+    2. Run the application
  
 
 
