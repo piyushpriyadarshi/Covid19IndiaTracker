@@ -3,9 +3,17 @@
 web application both web and mobile optimized to track and visualize every single corona virus cases in India.
 you can see the live demo of application at [COVI19 India DashBoard](https://piyushpriyadarshi.com/covid19/ "COVI19 India DashBoard")
 
+### DashBoard
 
 ![Dashboard!](https://github.com/piyushpriyadarshi/Covid19IndiaTracker/blob/master/screenshots/dashboard.JPG "COVI19 India DashBoard")
 
+
+### Email Subscribe
+![Email Subscription!](https://github.com/piyushpriyadarshi/Covid19IndiaTracker/blob/master/screenshots/email.JPG "COVI19 India DashBoard")
+
+
+### ML Prediction
+![Email Subscription!](https://github.com/piyushpriyadarshi/Covid19IndiaTracker/blob/master/screenshots/mlprediction.JPG "COVI19 India DashBoard")
 
 
 ### Features of This Application
