@@ -78,7 +78,7 @@ public class Mail {
         Content content = new Content("text/plain", "Thank you for subscribing our Daily Data Updates, \nThis is test mail for Covid19 Application to you, \nPlease move this email to inbox.");
         com.sendgrid.helpers.mail.Mail mail = new com.sendgrid.helpers.mail.Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid("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");
+        SendGrid sg = new SendGrid(apikey);
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
